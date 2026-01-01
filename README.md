@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LinkBook with Next.js
 
-## Getting Started
+## 🚀 프로젝트 개요
+- Next.js 기반으로 제작한 책이음 도서관 지도 서비스
+- 카카오 지도 SDK를 활용한 도서관 위치표시와 행정구역별 묶음 기능 제공
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 기능구현
+- 지도 내에 각 지역별로 책이음 도서관 수 확인 가능, 클릭시 확대.
+- vercel로 퍼블리싱
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 동작화면
+![screenshot](public/screen1.png)
+![screenshot](public/screen2.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 추후 구현예정 기능들
+- 코드정리 및 스타일 개선
+- 사용자의 위치정보를 받아 근처에 있는 책이음도서관 위치를 띄워주는 네비게이션 + 자체 UI 제작 / 웹앱 배포
