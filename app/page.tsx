@@ -20,7 +20,7 @@ export default function Home() {
 
   const markersRef = useRef<any[]>([]);
   const overlaysRef = useRef<any[]>([]);
-  const openInfoWindowRef = useRef<any>(null); // ✅ 열린 인포윈도우 추적
+  const openInfoWindowRef = useRef<any>(null);
 
   const clearAll = () => {
     markersRef.current.forEach((m) => m.setMap && m.setMap(null));
@@ -41,18 +41,14 @@ export default function Home() {
 
   // 줌 레벨에 따라 그룹 키 선택
   const pickGroupKey = (level: number, lib: Library) => {
-    if (level > 9) {
-      // 많이 축소 → 도 단위
-      return lib.region1;
-    } else if (level > 7) {
-      // 중간 확대 → 시군구 단위
-      return lib.region2;
-    } else if (level > 5) {
-      // 더 확대 → 읍면동 단위
-      return lib.region3 || null;
+    if (level >= 10) {
+      return lib.region1; // 도 단위
+    } else if (level >= 8) {
+      return lib.region2; // 시군구 단위
+    } else if (level >= 6) {
+      return lib.region3; // 읍면동 단위
     } else {
-      // 최대로 확대 → 개별 도서관
-      return null;
+      return null; // 개별 도서관
     }
   };
 
@@ -72,6 +68,7 @@ export default function Home() {
     clearAll();
 
     const level = map.getLevel();
+    console.log(level)
 
     if (level <= 5) {
       // 개별 도서관 표시
@@ -116,7 +113,7 @@ export default function Home() {
       const count = items.length;
 
       if (count === 1) {
-        // ✅ 그룹에 객체가 하나뿐이면 묶지 않고 개별 도서관 표시
+        // 그룹에 객체가 하나뿐이면 개별 도서관 표시
         const lib = items[0];
         const pos = new (window as any).kakao.maps.LatLng(lib.lat, lib.lng);
         const marker = new (window as any).kakao.maps.Marker({ position: pos, title: lib.name });
@@ -142,41 +139,26 @@ export default function Home() {
         return;
       }
 
-      // ✅ 그룹에 여러 개가 있을 때만 묶음 표시
+      // 그룹에 여러 개가 있을 때만 묶음 표시
       const text = `(${count}) ${key}`;
 
-      const marker = new (window as any).kakao.maps.Marker({ position: center, title: key });
+      const marker = new (window as any).kakao.maps.Marker({
+        position: center,
+        title: key,
+      });
       marker.setMap(map);
       markersRef.current.push(marker);
 
       const overlay = new (window as any).kakao.maps.CustomOverlay({
         position: center,
-        content: `<div style="padding:6px 10px;background:#222;color:#fff;border-radius:14px;font-weight:600;font-size:13px;white-space:nowrap;">${text}</div>`,
+        content: `<div style="padding:6px 10px;background:#222;color:#fff;
+             border-radius:14px;font-weight:600;font-size:13px;white-space:nowrap;">
+             ${text}</div>`,
         xAnchor: 0.5,
         yAnchor: 1.2,
       });
       overlay.setMap(map);
       overlaysRef.current.push(overlay);
-
-      // 클릭 시 확대
-      (window as any).kakao.maps.event.addListener(marker, "click", () => {
-        map.setLevel(Math.max(level - 4, 1), { animate: { duration: 200 } });
-        map.setCenter(center);
-      });
-      (window as any).kakao.maps.event.addListener(overlay, "click", () => {
-        map.setLevel(Math.max(level - 4, 1), { animate: { duration: 200 } });
-        map.setCenter(center);
-      });
-
-      // ✅ 더블클릭 시 두 배 확대
-      (window as any).kakao.maps.event.addListener(marker, "dblclick", () => {
-        map.setLevel(Math.max(level - 8, 1), { animate: { duration: 200 } });
-        map.setCenter(center);
-      });
-      (window as any).kakao.maps.event.addListener(overlay, "dblclick", () => {
-        map.setLevel(Math.max(level - 8, 1), { animate: { duration: 200 } });
-        map.setCenter(center);
-      });
     });
   };
 
@@ -192,7 +174,6 @@ export default function Home() {
         setMapLoaded(true);
         render();
 
-        // ✅ 줌 변경 시 열린 인포윈도우 닫기
         (window as any).kakao.maps.event.addListener(mapRef.current, "zoom_changed", () => {
           if (openInfoWindowRef.current) {
             openInfoWindowRef.current.close();
@@ -201,7 +182,6 @@ export default function Home() {
           render();
         });
 
-        // ✅ 드래그 종료 시 열린 인포윈도우 닫기
         (window as any).kakao.maps.event.addListener(mapRef.current, "dragend", () => {
           if (openInfoWindowRef.current) {
             openInfoWindowRef.current.close();
@@ -216,7 +196,7 @@ export default function Home() {
   useEffect(() => {
     if (mapLoaded) render();
   }, [mapLoaded]);
-  
+
    return (
     <>
       <Script
